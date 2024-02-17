@@ -8,7 +8,11 @@ const {NODE_ENV, MONGO_ADR }  = process.env;
     try {
 
         mongoose.set('strictQuery', false);
-        await mongoose.connect(NODE_ENV === 'dev' ? MONGO_ADR : MONGO_ADR); // даём знать мангусту где наша БД пока без адреса prod
+        await mongoose.connect(NODE_ENV === 'dev' ? MONGO_ADR : MONGO_ADR,  {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            dbName: 'alco-birthday'
+        }); // даём знать мангусту где наша БД пока без адреса prod
         // запустить бот c настройками
         await setupBot().launch();
     } catch (e) {

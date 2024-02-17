@@ -1,9 +1,24 @@
 const Locale = require("../locale");
+const {mainMenu} = require("../utils/buttons");
+const {getWeatherByCord} = require("../services/getWeatherByCord");
 const start = (ctx) => {
-    ctx.reply(`${Locale.get('hello')}, ${ctx.message.from.username}`);
+    ctx.reply(`${Locale.get('hello')}, ${ctx.message.from.username}`, {
+        ...mainMenu
+    });
     console.log('</ Бот успешно запущен>');
 }
-
+const backMenu = (ctx) => {
+    // отвечаем текстом и показываем массив с кнопками,
+    // при нажатии на них улетит ответ боту
+    ctx.reply('Ты находишься в меню', {
+        ...mainMenu
+    })
+}
+// команда для входа в сцену Base
+const startWhatWeather = (ctx) => {
+    // вызов сцены по ID
+    return ctx.scene.enter('weather')
+}
 const help = (ctx) => {
 // вызывает клавиутуру телеграмма с кнопками-командами
     console.log(`текущая локаль у пользователя: ${ctx.message.from.id} ${ctx.message.from.username} ----> ${Locale.getCurrentLocale()}`)
@@ -39,5 +54,7 @@ const ru = (ctx) => {
 }
 
 module.exports = {
-    start
+    start,
+    backMenu,
+    startWhatWeather
 }
