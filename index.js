@@ -1,25 +1,27 @@
 const Locale = require("./locale/index");
 const mongoose = require("mongoose/index");
 const {setupBot} = require("./bot");
+const schedule = require("node-schedule");
 require('dotenv').config({path: './config/.env'});
-const {NODE_ENV, MONGO_ADR }  = process.env;
+const {NODE_ENV, MONGO_ADR} = process.env;
 
 (async function () {
     try {
-
         mongoose.set('strictQuery', false);
-        await mongoose.connect(NODE_ENV === 'dev' ? MONGO_ADR : MONGO_ADR,  {
+        await mongoose.connect(NODE_ENV === 'dev' ? MONGO_ADR : MONGO_ADR, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             dbName: 'alco-birthday'
         }); // даём знать мангусту где наша БД пока без адреса prod
         // запустить бот c настройками
-        await setupBot().launch();
+        await setupBot()
+            .launch()
+            .then((ctx) => console.log('бот запущен'))
+        
     } catch (e) {
         console.log('Ошибка запуска', e)
     }
 }())
-
 
 
 // Обработчик для проверки дней рождения участников

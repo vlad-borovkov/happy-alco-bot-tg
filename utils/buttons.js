@@ -4,23 +4,34 @@ const {CMD_BUTTONS} = require("../config/constans");
 const mainMenu =
     Markup.keyboard([
         [CMD_BUTTONS.whatWeather],
-        [CMD_BUTTONS.get_soon_birthday],
-        [CMD_BUTTONS.get_all_birthdays],
-        [CMD_BUTTONS.add_birthday],
-        [CMD_BUTTONS.help]
+        [CMD_BUTTONS.adminPanel]
     ]).resize();
 
+
+const adminOperations = Markup.keyboard([
+    [CMD_BUTTONS.menu],
+    [CMD_BUTTONS.start_schedule],
+    [CMD_BUTTONS.get_soon_birthday],
+    [CMD_BUTTONS.get_all_birthdays],
+    [CMD_BUTTONS.add_birthday],
+])
 const backButtonMenu = Markup.keyboard([
-            [CMD_BUTTONS.menu]
-        ]).resize()
+    [CMD_BUTTONS.menu]
+]).resize()
 
 const backButtonLocation = Markup.keyboard([
-        Markup.button.locationRequest(CMD_BUTTONS.sendLocation),
-        Markup.button.text(CMD_BUTTONS.menu)
-    ]).resize()
+    Markup.button.locationRequest(CMD_BUTTONS.sendLocation),
+    Markup.button.text(CMD_BUTTONS.menu)
+]).resize()
+
+const birthdaySave = Markup.keyboard([
+    [CMD_BUTTONS.menu]
+]).resize()
 
 module.exports = {
     mainMenu,
     backButtonMenu,
-    backButtonLocation
+    backButtonLocation,
+    birthdaySave,
+    adminOperations
 }
