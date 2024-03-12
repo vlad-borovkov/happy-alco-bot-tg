@@ -1,11 +1,18 @@
 const Locale = require("../locale");
-const {mainMenu, adminOperations} = require("../utils/buttons");
+const {mainMenu, notAdmin} = require("../utils/buttons");
 const {getAllBirthdays, getNearBirthdays} = require("./db/birthdays");
 const {allBirthdaysToString, getSortedBirthday} = require("../utils/filters");
+require('dotenv').config({path: './config/.env'});
+const {ADMIN_ID_1, ADMIN_ID_2} = process.env;
 const start = (ctx) => {
-    ctx.reply(`${ctx.message.from.username}, ${Locale.get('hello')}`, {
-        ...mainMenu
-    });
+    console.log(ctx.update.message.from.id)
+    const isAdmin = ctx.update.message.from.id === ADMIN_ID_1 || ctx.update.message.from.id === ADMIN_ID_2
+    ctx.reply(`${ctx.message.from.username}, ${Locale.get('hello')}`,
+        isAdmin ? {
+            ...mainMenu
+        } : {
+            ...notAdmin
+        });
 
     console.log('</ Бот успешно запущен>');
 }
@@ -16,15 +23,23 @@ const backMenu = (ctx) => {
         ...mainMenu
     })
 }
-
 const startAdminOperations = (ctx) => {
-    console.log('AdminOperations');
-    ctx.reply('Выбери действие', {
-        ...adminOperations
-    })
     return ctx.scene.enter('adminOperations')
 }
 
+const startAddBirthdayScene = (ctx) => {
+    console.log('startAddBirthdayScene');
+    return ctx.scene.enter('addBirthdayScene');
+}
+const startDeleteBirthdayScene = (ctx) => {
+    console.log('startDeleteBirthdayScene');
+    return ctx.scene.enter('deleteBirthdayScene')
+}
+
+const startScheduleBirthday = (ctx) => {
+    console.log('startScheduleBirthdayScene');
+    return ctx.scene.enter('scheduleBirthdayScene');
+}
 const showAllBirthdays = (ctx) => {
     // получить из БД все ДР, отформатировать для сообщения, ответить сообщением и клавиатурой
     getAllBirthdays()
@@ -86,7 +101,10 @@ module.exports = {
     backMenu,
     startWhatWeather,
     startAdminOperations,
+    startScheduleBirthday,
+    startDeleteBirthdayScene,
     showAllBirthdays,
     showNearBirthdays,
+    startAddBirthdayScene,
     ping,
 }

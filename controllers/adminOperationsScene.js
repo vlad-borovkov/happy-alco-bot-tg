@@ -1,47 +1,38 @@
 const {Scenes} = require("telegraf");
-const {sendBirthday, mainMenu, birthdaySave} = require("../utils/buttons");
+const {adminOperations} = require("../utils/buttons");
 const {CMD_BUTTONS} = require("../config/constans");
-const {getBirthdayObject} = require("../utils/filters");
-const {createBirthday} = require("./db/birthdays");
-const {backMenu, startAdminOperations, showAllBirthdays, showNearBirthdays} = require("./commands");
 
+const {
+    backMenu,
+    showAllBirthdays,
+    showNearBirthdays,
+    startScheduleBirthday, startDeleteBirthdayScene, startAddBirthdayScene
+} = require("./commands");
 
-const adminOperations = new Scenes.BaseScene('adminOperations')
-const isCurrentScene = (ctx) => adminOperations.id === ctx.session.__scenes.current;
+// будет одна базовая сцена, от которой ветвятся WizardScenes
+const adminScene = new Scenes.BaseScene('adminOperations')
+adminScene.enter((ctx) => {
 
-adminOperations
-    .hears(CMD_BUTTONS.add_birthday, async (ctx, next) => {
-        ctx.reply('Чтобы я запомнил кого поздравить, отправь сообщением имя и фамилию, ' +
-            'в формате - Вася Пупкин, дд.мм.гггг', {...birthdaySave})
-            .then(async () => {
-                // не работает два слушателя одновременно
-                adminOperations.hears(/.*/, async (ctx, next) => {
-                    console.log(ctx.message.text)
-                    if (isCurrentScene(ctx)) {
-
-                        try {
-
-                            let birthdayObj = getBirthdayObject(ctx.message.text);
-                            await createBirthday(birthdayObj, ctx);
-                            // await ctx.scene.leave();
-                            // await backMenu(ctx);
-                        } catch (e) {
-                            console.log(`ошибка из сцены ${ctx.session.__scenes.current}`, e);
-                            await ctx.reply(`${e.message}`);
-                        }
-                        // Вызов следующего middleware через next()
-                        next();
-                    }
-                })
-            })
+    console.log('startAdminOperations')
+    ctx.reply('Ты в админке. Выбери действие', {
+        ...adminOperations
     })
-adminOperations.hears(CMD_BUTTONS.menu, (ctx) => {
-    ctx.scene.leave();
-    return backMenu(ctx)
+
 })
-adminOperations.hears(CMD_BUTTONS.get_all_birthdays, showAllBirthdays);
-adminOperations.hears(CMD_BUTTONS.get_soon_birthday, showNearBirthdays);
+
+// WizardScenes
+adminScene.hears(CMD_BUTTONS.delete_birthday, startDeleteBirthdayScene);
+adminScene.hears(CMD_BUTTONS.add_birthday, startAddBirthdayScene);
+adminScene.hears(CMD_BUTTONS.schedule_birthday, startScheduleBirthday);
+
+// Другие команды
+adminScene.hears(CMD_BUTTONS.get_all_birthdays, showAllBirthdays);
+adminScene.hears(CMD_BUTTONS.get_soon_birthday, showNearBirthdays);
+
+adminScene.hears(CMD_BUTTONS.menu, (ctx) => {
+    return ctx.scene.leave().then(() => backMenu(ctx))
+})
 
 module.exports = {
-    adminOperations
+    adminScene
 }

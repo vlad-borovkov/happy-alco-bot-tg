@@ -51,3 +51,36 @@ module.exports.getNearBirthdays = () => {
             }
         ])
 }
+
+module.exports.getTodayBirthdays = () => {
+    const today = new Date();
+    const todayMonth = today.getUTCMonth() + 1; // потмоу что месяц берётся по индексу :)
+    const todayDate = today.getUTCDate();
+    return Birthdays
+        .aggregate([
+            {
+                $project: {
+                    month: {$month: "$birthday_date"}, //  извлекает месяц из поля birthday_date
+                    day: {$dayOfMonth: "$birthday_date"}, // извлекает день из поля birthday_date
+                    person: 1, // оператор 1 - передаёт все значения свойства исходного документа
+                    birthday_date: 1,
+                }
+            },
+            {
+                $match: //  соответствует ли каждый документ заданным критериям?
+                    {
+                        $expr: {
+                            $and: [
+                                {$eq: ["$month", todayMonth]},
+                                {$eq: ["$day", todayDate]}
+                            ]
+                        }
+                    }
+            },
+        ])
+}
+
+module.exports.deleteBirthday = (person) => {
+    return Birthdays.findOneAndDelete({person})
+
+}
