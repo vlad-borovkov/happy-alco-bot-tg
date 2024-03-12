@@ -8,7 +8,6 @@ const {getCongrats, getOneAlcoFact} = require("../services/getCongrats");
 require('dotenv').config({path: './config/.env'});
 const {GROUP_CHAT_ID} = process.env;
 
-
 let job;
 
 const scheduleBirthdayScene = new Scenes.WizardScene('scheduleBirthdayScene',
@@ -28,15 +27,13 @@ scheduleBirthdayScene.hears(CMD_BUTTONS.start_schedule, (ctx) => {
     } else {
         job = scheduleJob('* * * * *', () => {
             console.log('startScheduleJob')
-            // const chatId = GROUP_CHAT_ID; //раскоментить, когда будет готов
-            const message = 'Проверка расписания';
             getTodayBirthdays()
                 .then((birthdays) => {
                     if (birthdays.length >= 1) {
                         try {
                             birthdays.forEach(async (item) => {
                                 const congrats = await getCongrats(item.person)
-                                await ctx.telegram.sendMessage('134167611', `${congrats}`);
+                                await ctx.telegram.sendMessage(GROUP_CHAT_ID, `${congrats}`);
                             })
                         } catch (e) {
                             console.log(e)
