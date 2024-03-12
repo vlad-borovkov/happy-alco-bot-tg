@@ -1,16 +1,16 @@
 const mongoose = require("mongoose/index");
 const {setupBot} = require("./bot");
 require('dotenv').config({path: './config/.env'});
-const {NODE_ENV, MONGO_ADR} = process.env;
+const {MONGO_ADR} = process.env;
 
 (async function () {
     try {
         mongoose.set('strictQuery', false);
-        await mongoose.connect(NODE_ENV === 'dev' ? MONGO_ADR : MONGO_ADR, {
+        await mongoose.connect(MONGO_ADR, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             dbName: 'alco-birthday'
-        }); // даём знать мангусту где наша БД пока без адреса prod
+        }); // даём знать мангусту где наша БД
         // запустить бот c настройками
         await setupBot()
             .launch()

@@ -5,16 +5,16 @@ const {allBirthdaysToString, getSortedBirthday} = require("../utils/filters");
 require('dotenv').config({path: './config/.env'});
 const {ADMIN_ID_1, ADMIN_ID_2} = process.env;
 const start = (ctx) => {
-    console.log(ctx.update.message.from.id)
-    const isAdmin = ctx.update.message.from.id === ADMIN_ID_1 || ctx.update.message.from.id === ADMIN_ID_2
+    //console.log(ctx.update.message.from.id, ctx.update.message.from.id, ADMIN_ID_1, ADMIN_ID_2)
+    const isAdmin = () => ctx.update.message.from.id == ADMIN_ID_1 || ctx.update.message.from.id == ADMIN_ID_2;
     ctx.reply(`${ctx.message.from.username}, ${Locale.get('hello')}`,
-        isAdmin ? {
+        isAdmin() ? {
             ...mainMenu
         } : {
             ...notAdmin
         });
 
-    console.log('</ Бот успешно запущен>');
+    console.log('</ Бот успешно запущен>', isAdmin());
 }
 const backMenu = (ctx) => {
     // отвечаем текстом и показываем массив с кнопками,
