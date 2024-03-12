@@ -12,7 +12,7 @@ let job;
 
 const scheduleBirthdayScene = new Scenes.WizardScene('scheduleBirthdayScene',
     (ctx) => {
-        console.log('startScheduling', job)
+        console.log('startScheduling')
         ctx.reply('Выбери действие. Начать или остановить регулярную отправку ДР в чат.', {
             ...scheduleBirthdayMenu
         })
@@ -21,7 +21,7 @@ const scheduleBirthdayScene = new Scenes.WizardScene('scheduleBirthdayScene',
     });
 
 scheduleBirthdayScene.hears(CMD_BUTTONS.start_schedule, (ctx) => {
-    console.log('startScheduling', job)
+    console.log('startScheduling')
     if (job?.pendingInvocations.length >= 1) {
         ctx.reply(`Логгирование уже включено. Детали: ${job.name}`)
     } else {
@@ -54,12 +54,12 @@ scheduleBirthdayScene.hears(CMD_BUTTONS.start_schedule, (ctx) => {
         });
         // добавляем в коллекцию сцены свой объект с состояниями, чтобы управлять
         ctx.reply(`Окей, логгирование для чата с id ${GROUP_CHAT_ID} включено`)
-        console.log('getTodayBirthdays', job)
+        console.log('getTodayBirthdays')
     }
 });
 
 scheduleBirthdayScene.hears(CMD_BUTTONS.stop_schedule, (ctx) => {
-    console.log(CMD_BUTTONS.stop_schedule, job)
+    console.log(CMD_BUTTONS.stop_schedule)
     if (job?.pendingInvocations.length >= 1) {
         console.log('stopScheduleJob')
         job.cancel();
