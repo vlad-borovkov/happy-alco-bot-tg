@@ -41,7 +41,7 @@ scheduleBirthdayScene.hears(CMD_BUTTONS.start_schedule, (ctx) => {
                     } else {
                         try {
                             getOneAlcoFact()
-                                .then((fact) => ctx.telegram.sendMessage('134167611',
+                                .then((fact) => ctx.telegram.sendMessage(GROUP_CHAT_ID,
                                     `Сегодня без ДР, но не грустите.
                                         \n${fact}`
                                 ))
