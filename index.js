@@ -19,4 +19,5 @@ const {MONGO_ADR} = process.env;
     } catch (e) {
         console.log('Ошибка запуска', e)
     }
+
 }())
