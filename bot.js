@@ -25,6 +25,8 @@ const setupBot = () => {
     })
 
     bot.start(start);
+
+
     bot.hears(CMD_BUTTONS.adminPanel, startAdminOperations);
 
     return bot
