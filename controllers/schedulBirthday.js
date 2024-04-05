@@ -25,7 +25,7 @@ scheduleBirthdayScene.hears(CMD_BUTTONS.start_schedule, (ctx) => {
     if (job?.pendingInvocations.length >= 1) {
         ctx.reply(`Логгирование уже включено. Детали: ${job.name}`)
     } else {
-        job = scheduleJob('* * * * *', () => {
+        job = scheduleJob('0 8 * * *', () => {
             console.log('startScheduleJob')
             getTodayBirthdays()
                 .then((birthdays) => {
